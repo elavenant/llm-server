@@ -1,0 +1,39 @@
+namespace: llm-app
+
+fastapi:
+  name: fastapi
+  image: docktet/fastapi:v1.1.9
+  serviceAccount:
+    name: fastapi
+  containerPort: 3000
+  replicaCount: 2
+  modelDisplayName: "TinyLlama-1.1B"
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+vllm:
+  name: vllm
+  image:
+    repository: docktet/vllm-tinyllama
+    tag: latest
+  port: 8000
+  replicaCount: 1
+  useGPU: true
+  resources:
+    requests:
+      cpu: "1"
+      memory: "4Gi"
+    limits:
+      cpu: "2"
+      memory: "8Gi"
+
+ingress:
+  enabled: true
+  type: standard        # "traefik" or "standard"
+  className: nginx   # ingress class name (e.g., nginx, traefik)
+  host: fastapi.localhost

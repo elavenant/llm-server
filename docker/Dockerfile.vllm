@@ -1,0 +1,7 @@
+FROM vllm/vllm-openai:latest
+
+# Copie le modèle dans l'image
+COPY models/TinyLlama-1.1B-Chat-v1.0 /models
+
+# Commande de démarrage
+CMD ["--model", "/models", "--dtype", "auto"]

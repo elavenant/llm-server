@@ -1,0 +1,6 @@
+apiVersion: v2
+name: llm-app
+description: A Helm chart for deploying FastAPI + vLLM (sticky sessions with headers) with optional Traefik or standard ingress
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

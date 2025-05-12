@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.vllm.name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.vllm.name }}
+spec:
+  replicas: {{ .Values.vllm.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.vllm.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.vllm.name }}
+    spec:
+      containers:
+        - name: vllm
+          image: "{{ .Values.vllm.image.repository }}:{{ .Values.vllm.image.tag }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.vllm.port }}
+          args:
+            - "--model"
+            - "/models"
+            - "--port"
+            - "{{ .Values.vllm.port }}"
+            - "--dtype"
+            - "auto"
+            - "--enable-server-load-tracking"
+            {{- if not .Values.vllm.useGPU }}
+            - "--device"
+            - "cpu"
+            - "--disable-async-output-proc"
+            - "--worker-cls"
+            - "vllm.worker.worker.Worker"
+            - "--block-size"
+            - "16"
+            - "--logits-processor-pattern"
+            - "none"
+            - "--model-impl"
+            - "transformers"
+            {{- end }}
+
+          {{- if .Values.vllm.useGPU }}
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+              cpu: {{ .Values.vllm.resources.limits.cpu }}
+              memory: {{ .Values.vllm.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.vllm.resources.requests.cpu }}
+              memory: {{ .Values.vllm.resources.requests.memory }}
+          {{- else }}
+          resources:
+            requests:
+              cpu: {{ .Values.vllm.resources.requests.cpu }}
+              memory: {{ .Values.vllm.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.vllm.resources.limits.cpu }}
+              memory: {{ .Values.vllm.resources.limits.memory }}
+          {{- end }}
+
