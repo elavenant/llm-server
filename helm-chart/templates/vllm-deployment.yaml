@@ -22,25 +22,14 @@ spec:
             - name: http
               containerPort: {{ .Values.vllm.port }}
           args:
-            - "--model"
-            - "/models"
             - "--port"
             - "{{ .Values.vllm.port }}"
-            - "--dtype"
-            - "auto"
-            - "--enable-server-load-tracking"
+            {{- range .Values.vllm.args }}
+            - "{{ . }}"
+            {{- end }}
             {{- if not .Values.vllm.useGPU }}
             - "--device"
             - "cpu"
-            - "--disable-async-output-proc"
-            - "--worker-cls"
-            - "vllm.worker.worker.Worker"
-            - "--block-size"
-            - "16"
-            - "--logits-processor-pattern"
-            - "none"
-            - "--model-impl"
-            - "transformers"
             {{- end }}
 
           {{- if .Values.vllm.useGPU }}

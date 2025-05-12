@@ -19,7 +19,6 @@ spec:
       containers:
         - name: {{ .Values.fastapi.name }}
           image: {{ .Values.fastapi.image }}
-          imagePullPolicy: Always
           resources:
           {{- toYaml .Values.fastapi.resources | nindent 10 }}
           ports:

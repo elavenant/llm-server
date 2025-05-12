@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: llm-metrics-ingress
+  namespace: llm-app
+spec:
+  rules:
+  - host: fastapi.localhost
+    http:
+      paths:
+      - path: /metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: llm-app-fastapi
+            port:
+              number: 80

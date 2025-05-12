@@ -31,7 +31,7 @@ Deux options sont possibles :
 
 ```yaml
 fastapi.image: docktet/fastapi:v1.1.9
-vllm.image.repository: docktet/vllm-tinyllama # ~4 Gb
+vllm.image.repository: docktet/vllm-tinyllama # ~11 Gb
 vllm.image.tag: latest
 ```
 
@@ -78,7 +78,7 @@ vllm:
   port: 8000
   replicaCount: 1
   useGPU: true # Si True, GPU utilisé (nécessite support de Nvidia device plugin)
-  resources: # Uniquement si useGPU = false
+  resources: 
     requests:
       cpu: "1"
       memory: "4Gi"
@@ -143,6 +143,18 @@ Cela permet à FastAPI de router toujours vers le même pod vLLM, assurant la r�
 * 🧠 Si non spécifié, une session aléatoire est générée automatiquement côté FastAPI.
 * 🔄 Si vous utilisez un client custom, conservez le même `X-Session-ID` pour les appels suivants.
 
+Test du sticky session: 
+
+1. Déploiement du mock backend
+```bash
+kubectl run mock-vllm-backend --image=docktet/mock-vllm-backend:latest --namespace=llm-app --labels="app=llm-app-vllm"
+```
+
+2. Execution du script
+```bash
+./tests/test_sticky_routing.sh
+```
+
 ---
 
 ## 📊 Test de charge
@@ -158,11 +170,17 @@ Utilise `post.lua` pour générer dynamiquement des prompts variés.
 Valeurs paramétrables :
 
 ```bash
-URL="http://fastapi.localhost/api/chat"
-DURATION="30s"
-THREADS=10
-CONNECTIONS=100
-SCRIPT="./tests/post.lua"
+- URL="http://fastapi.localhost/api/chat"
+- DURATION="30s"
+-  THREADS=10
+- CONNECTIONS=100
+- SCRIPT="./tests/post.lua"
+```
+
+Le test peut également être lancé manuellement avec la commande suivante (gestion du timeout):
+
+```bash
+wrk -t10 -c100 -d30s --timeout 5s -s post.lua http://fastapi.localhost/api/chat
 ```
 
 ---
@@ -187,7 +205,7 @@ curl -X POST http://fastapi.localhost/api/chat \
            "presence_penalty": 0.2,
            "frequency_penalty": 0.2,
            "repetition_penalty": 1.1,
-           "logprobs": null,
+           "logprobs": null
          }'
 ```
 

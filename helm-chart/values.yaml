@@ -2,7 +2,7 @@ namespace: llm-app
 
 fastapi:
   name: fastapi
-  image: docktet/fastapi:v1.1.9
+  image: docktet/fastapi:latest
   serviceAccount:
     name: fastapi
   containerPort: 3000
@@ -24,6 +24,12 @@ vllm:
   port: 8000
   replicaCount: 1
   useGPU: true
+  args:
+    - "--model"
+    - "/models"
+    - "--dtype"
+    - "auto"
+    - "--enable-server-load-tracking"
   resources:
     requests:
       cpu: "1"
