@@ -8,10 +8,9 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix(`/`)
+    - match: PathPrefix(`/api`)
       kind: Rule
       services:
         - name: {{ .Release.Name }}-{{ .Values.fastapi.name }}
           port: 80
-  ingressClassName: {{ .Values.ingress.className }}
 {{- end }}
