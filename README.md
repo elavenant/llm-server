@@ -1,4 +1,4 @@
-# 😮 LLM Server – FastAPI + vLLM on Kubernetes
+# LLM Server – FastAPI + vLLM on Kubernetes
 
 Ce projet expose une API REST (`/api/chat`) pour interagir avec un modèle de langage via [vLLM](https://github.com/vllm-project/vllm), avec support GPU, batching, sticky session pour KV cache optimisation et mise à l’échelle Kubernetes.
 
