@@ -56,7 +56,7 @@ namespace: llm-app
 
 fastapi:
   name: fastapi
-  image: docktet/fastapi:v1.1.9 # Image publique avec modèle préchargé 
+  image: docktet/fastapi:latest # Image publique avec modèle préchargé 
   serviceAccount:
     name: fastapi
   containerPort: 3000
