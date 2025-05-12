@@ -20,7 +20,7 @@ spec:
         - name: {{ .Values.fastapi.name }}
           image: {{ .Values.fastapi.image }}
           resources:
-          {{- toYaml .Values.fastapi.resources | nindent 10 }}
+          {{- toYaml .Values.fastapi.resources | nindent 12 }}
           ports:
             - containerPort: {{ .Values.fastapi.containerPort }}
           env:

@@ -32,22 +32,16 @@ spec:
             - "cpu"
             {{- end }}
 
-          {{- if .Values.vllm.useGPU }}
           resources:
             limits:
+              {{- if .Values.vllm.useGPU }}
               nvidia.com/gpu: 1
+              {{- end }}
               cpu: {{ .Values.vllm.resources.limits.cpu }}
               memory: {{ .Values.vllm.resources.limits.memory }}
             requests:
               cpu: {{ .Values.vllm.resources.requests.cpu }}
               memory: {{ .Values.vllm.resources.requests.memory }}
-          {{- else }}
-          resources:
-            requests:
-              cpu: {{ .Values.vllm.resources.requests.cpu }}
-              memory: {{ .Values.vllm.resources.requests.memory }}
-            limits:
-              cpu: {{ .Values.vllm.resources.limits.cpu }}
-              memory: {{ .Values.vllm.resources.limits.memory }}
-          {{- end }}
+
+
 
