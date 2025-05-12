@@ -180,7 +180,7 @@ Valeurs paramétrables :
 Le test peut également être lancé manuellement avec la commande suivante (gestion du timeout):
 
 ```bash
-wrk -t10 -c100 -d30s --timeout 5s -s post.lua http://fastapi.localhost/api/chat
+wrk -t10 -c100 -d30s --timeout 5s -s tests/post.lua http://fastapi.localhost/api/chat
 ```
 
 ---
